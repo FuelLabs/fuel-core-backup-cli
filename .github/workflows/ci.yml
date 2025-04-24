@@ -16,19 +16,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: rustup target add wasm32-unknown-unknown
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          targets: wasm32-unknown-unknown
+          toolchain: ${{ env.RUST_VERSION }}
       - uses: Swatinem/rust-cache@v2
       - name: Build
-        run: cargo build --verbose --all-features
+        run: cargo build --all-features
 
-  lint:
+  clippy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: rustup target add wasm32-unknown-unknown
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          targets: wasm32-unknown-unknown
+          toolchain: ${{ env.RUST_VERSION }}
       - uses: Swatinem/rust-cache@v2
       - name: Clippy
         run: cargo clippy --all-features
+
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          targets: wasm32-unknown-unknown
+          toolchain: nightly
+      - uses: Swatinem/rust-cache@v2
       - name: Formatting
         run: cargo +nightly fmt --all -- --check
 
@@ -38,7 +54,10 @@ jobs:
       - name: Install nextest
         uses: taiki-e/install-action@nextest
       - uses: actions/checkout@v4
-      - run: rustup target add wasm32-unknown-unknown
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          targets: wasm32-unknown-unknown
+          toolchain: ${{ env.RUST_VERSION }}
       - uses: Swatinem/rust-cache@v2
       - name: Run tests
         run: cargo nextest run --all-features
