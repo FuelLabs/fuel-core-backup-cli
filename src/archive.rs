@@ -1,16 +1,36 @@
 use rayon::prelude::*;
-use std::fs::{self, File};
-use std::io::{BufReader, BufWriter, Cursor, Read};
-use std::os::unix::fs::PermissionsExt;
-use std::path::{Path, PathBuf};
-use tar::{Archive, Builder, Header};
+use std::{
+    fs::{
+        self,
+        File,
+    },
+    io::{
+        BufReader,
+        BufWriter,
+        Cursor,
+        Read,
+    },
+    os::unix::fs::PermissionsExt,
+    path::{
+        Path,
+        PathBuf,
+    },
+};
+use tar::{
+    Archive,
+    Builder,
+    Header,
+};
 
 pub fn add_to_archive(src_dir: &Path, dest_file: &Path) -> anyhow::Result<()> {
     let file = File::create(dest_file)?;
     let writer = BufWriter::new(file);
     let mut tar = Builder::new(writer);
 
-    fn collect_files(path: &Path, base_path: &Path) -> anyhow::Result<Vec<(PathBuf, PathBuf)>> {
+    fn collect_files(
+        path: &Path,
+        base_path: &Path,
+    ) -> anyhow::Result<Vec<(PathBuf, PathBuf)>> {
         let mut files = Vec::new();
         for entry in fs::read_dir(path)? {
             let entry = entry?;

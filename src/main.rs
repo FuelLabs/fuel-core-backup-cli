@@ -4,7 +4,10 @@ mod restore;
 #[cfg(feature = "archive")]
 mod archive;
 
-use clap::{Parser, Subcommand};
+use clap::{
+    Parser,
+    Subcommand,
+};
 
 #[derive(Debug, Subcommand)]
 enum BackupCommand {

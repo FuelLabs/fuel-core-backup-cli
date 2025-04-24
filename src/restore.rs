@@ -18,8 +18,9 @@ pub fn restore(restore_to: &str, backup_path: &str) -> anyhow::Result<()> {
     let restore_to = std::path::Path::new(restore_to);
     let tmp_backup_dir = TempDir::new()?;
 
-    extract_from_archive(backup_path, &tmp_backup_dir.path())?;
-    CombinedDatabase::restore(restore_to, &tmp_backup_dir.path())?;
+    let path = tmp_backup_dir.path();
+    extract_from_archive(backup_path, path)?;
+    CombinedDatabase::restore(restore_to, path)?;
 
     Ok(())
 }
