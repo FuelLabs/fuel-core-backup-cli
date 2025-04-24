@@ -45,6 +45,7 @@ jobs:
         with:
           targets: wasm32-unknown-unknown
           toolchain: ${{ env.RUST_FMT_VERSION }}
+          components: rustfmt
       - uses: Swatinem/rust-cache@v2
       - name: Formatting
         run: cargo +${{ env.RUST_FMT_VERSION }} fmt --all -- --check
