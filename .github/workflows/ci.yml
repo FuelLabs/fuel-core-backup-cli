@@ -10,6 +10,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   RUST_VERSION: 1.85.0
+  RUST_FMT_VERSION: nightly-2025-03-08
 
 jobs:
   build:
@@ -43,10 +44,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@master
         with:
           targets: wasm32-unknown-unknown
-          toolchain: nightly
+          toolchain: ${{ env.RUST_FMT_VERSION }}
       - uses: Swatinem/rust-cache@v2
       - name: Formatting
-        run: cargo +nightly fmt --all -- --check
+        run: cargo +${{ env.RUST_FMT_VERSION }} fmt --all -- --check
 
   test:
     runs-on: ubuntu-latest
