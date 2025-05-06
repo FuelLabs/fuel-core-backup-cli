@@ -7,8 +7,6 @@ use std::{
     io::{
         BufReader,
         BufWriter,
-        Cursor,
-        Read,
     },
     os::unix::fs::PermissionsExt,
     path::{
@@ -53,7 +51,6 @@ pub fn add_to_archive(src_dir: &Path, dest_file: &Path) -> anyhow::Result<()> {
         .par_iter()
         .filter_map(|(relative_path, path)| {
             let metadata = path.metadata().ok()?;
-            let file_content = File::open(path).ok()?;
             let mut header = Header::new_gnu();
             header.set_path(relative_path).ok()?;
             header.set_size(metadata.len());
@@ -61,15 +58,14 @@ pub fn add_to_archive(src_dir: &Path, dest_file: &Path) -> anyhow::Result<()> {
             header.set_mtime(metadata.modified().ok()?.elapsed().ok()?.as_secs());
             header.set_cksum();
 
-            let mut buffer = Vec::new();
-            BufReader::new(file_content).read_to_end(&mut buffer).ok()?;
-            Some((header, buffer))
+            Some((header, path.clone()))
         })
         .collect::<Vec<_>>();
 
-    // tar needs sequential writes
-    for (header, data) in files {
-        tar.append(&header, Cursor::new(data))?;
+    // Process files sequentially, reading and writing each one
+    for (header, path) in files {
+        let file = File::open(path)?;
+        tar.append(&header, file)?;
     }
 
     tar.finish()?;
