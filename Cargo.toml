@@ -1,14 +1,14 @@
 [package]
 name = "fuel-core-backup-cli"
-version = "0.43.1"
+version = "0.44.0"
 edition = "2021"
 
 [dependencies]
-clap = {  version = "4.5.38" , features = ["derive"]}
-anyhow = "1.0.97"
-fuel-core = { git = "https://github.com/fuellabs/fuel-core", rev = "754cd93944" ,features = ["rocksdb", "backup"] }
-tar = { version = "0.4.44", optional = true}
-tempfile = { version = "3.20.0", optional = true }
+clap = "4.5.38"
+anyhow = { version = "1.0.97", default-features = false }
+fuel-core = { version = "0.44.0", features = ["backup"], default-features = false }
+tar = { version = "0.4.44", optional = true, default-features = false }
+tempfile = { version = "3.20.0", optional = true , default-features = false }
 rayon = { version = "1.10.0", optional = true }
 
 [features]
