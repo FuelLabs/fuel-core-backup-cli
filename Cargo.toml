@@ -4,7 +4,7 @@ version = "0.44.0"
 edition = "2021"
 
 [dependencies]
-clap = "4.5.38"
+clap = "4.5.41"
 anyhow = { version = "1.0.97", default-features = false }
 fuel-core = { version = "0.44.0", features = ["backup"], default-features = false }
 tar = { version = "0.4.44", optional = true, default-features = false }
